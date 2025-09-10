@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "258309549982",
+    "firebase_url": "https://lifeband-e6815-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lifeband-e6815",
+    "storage_bucket": "lifeband-e6815.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258309549982:android:416b3de9206887b6dab08f",
+        "android_client_info": {
+          "package_name": "com.example.lifeband"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJwn4XOx1fH7-ivsFSfHfFPTv8a4CirKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
