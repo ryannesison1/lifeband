@@ -1,11 +1,13 @@
+// main.dart
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'services/background_service.dart';
+import 'services/background_service.dart'; // This import is necessary
 import 'screens/auth_screen.dart';
-import 'screens/dashboard_screen.dart';
+import 'screens/main_screen.dart';
 
 // Global instance of the notifications plugin.
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -18,9 +20,9 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   // The order of these calls is critical to prevent the "Bad notification" crash.
-  await initializeNotifications();     // 1. Initialize the plugin FIRST.
-  await setupNotificationChannels();   // 2. Create channels SECOND.
-  await initializeService();           // 3. Start the service LAST.
+  await initializeNotifications(); // 1. Initialize the plugin FIRST.
+  await setupNotificationChannels(); // 2. Create channels SECOND.
+  await initializeService(); // 3. Start the service LAST.
 
   runApp(const MyApp());
 }
@@ -61,7 +63,6 @@ Future<void> setupNotificationChannels() async {
   if (androidPlugin != null) {
     await androidPlugin.createNotificationChannel(serviceChannel);
     await androidPlugin.createNotificationChannel(alertChannel);
-    // CORRECTED: The method is requestNotificationsPermission, not requestPermissions.
     await androidPlugin.requestNotificationsPermission();
   }
 }
@@ -80,18 +81,30 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
         ).copyWith(
           secondary: Colors.white,
+          error: Colors.redAccent,
         ),
       ),
-      home: StreamBuilder(
+      home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (ctx, userSnapshot) {
-          if (userSnapshot.hasData) {
-            return const DashboardScreen(deviceId: 'esp32_device_01');
+          if (userSnapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
           }
+          // Check if a user is logged in
+          if (userSnapshot.hasData) {
+            final user = userSnapshot.data!;
+            // **CRITICAL FIX**: Check if the user's email is verified.
+            if (user.emailVerified) {
+              // If verified, show the main content.
+              return const MainScreen(deviceId: 'esp32_device_01');
+            }
+          }
+          // If there is no user, or the user's email is NOT verified,
+          // show the authentication screen.
           return const AuthScreen();
         },
       ),
     );
   }
 }
-

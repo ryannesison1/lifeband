@@ -20,6 +20,10 @@ dependencies:
   flutter_local_notifications:
   flutter_background_service:
   flutter_background_service_android:
+  fl_chart:
+  flutter_map:
+  latlong2:
+  geocoding:
 
   intl:
 
@@ -32,7 +36,7 @@ dev_dependencies:
     sdk: flutter
 
 
-  flutter_lints: ^5.0.0
+  flutter_lints:
 
 
 flutter:
